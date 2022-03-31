@@ -35,7 +35,7 @@ for prisma_aadress in aadressid_prisma:
     for hind in prisma_hinna_andmed:
         hinnad = soup.find_all("span", {"class": hind})
         prisma_toote_hind += hinnad[0].text + '.'
-    prisma_toote_hind = float(prisma_toote_hind.strip("."))
+    prisma_toote_hind = ("Kõige odavam 1l piim on selveris hinnaga " + str(prisma_toote_hind.strip(".")))
     prisma_toote_hind.append(toodete_hinnad)
       
 for ecoop_address in aadressid_ecoop:
@@ -46,7 +46,7 @@ for ecoop_address in aadressid_ecoop:
     soup = BeautifulSoup(source, 'html.parser')
     ecoopi_toote_hind = ""
     hinnad = soup.find_all("div", {"class": "base"})
-    ecoopi_toote_hind = hinnad[0].text.strip(" € / l")
+    ecoopi_toote_hind = ("Kõige odavam 1l piim on ecoopis hinnaga " + hinnad[0].text.strip(" € / l"))
     ecoopi_toote_hind.append(toodete_hinnad)
     
 for selver_address in aadressid_selver:
@@ -57,8 +57,8 @@ for selver_address in aadressid_selver:
     soup = BeautifulSoup(source, 'html.parser')
     selveri_toote_hind = ""
     hinnad = soup.find_all("span", {"class": "ProductPrice__unit-price"})
-    selveri_toote_hind = hinnad[0].text.strip(" € / l")
+    selveri_toote_hind = ("Kõige odavam 1l piim on selveris hinnaga " + hinnad[0].text.strip(" € / l"))
     selveri_toote_hind.append(toodete_hinnad)
     
 print(toodete_hinnad)
-
+#print(max(toodete_hinnad))
