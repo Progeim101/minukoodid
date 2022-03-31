@@ -1,0 +1,64 @@
+import requests
+from bs4 import BeautifulSoup
+from selenium import webdriver
+import time
+
+def startSelenium(url):
+    optionss = webdriver.ChromeOptions()
+    optionss.add_argument('--disable-blink-features=AutomationControlled')
+    optionss.add_experimental_option("excludeSwitches", ["enable-automation"])
+    optionss.add_experimental_option('useAutomationExtension', False)
+
+    optionss.add_argument("window-size=1600,1200")
+    from fake_useragent import UserAgent
+    ua = UserAgent()
+    user_agent = ua.random
+    optionss.add_argument(f'user-agent={user_agent}')
+
+    browser = webdriver.Chrome(options=optionss, executable_path=chromeDriver)
+    browser.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
+    browser.get(url)
+    return browser
+prisma_hinna_andmed = ['whole-number', 'decimal']
+aadressid_prisma = ['https://www.prismamarket.ee/entry/piim-2-5---1-l/4740125120011']
+aadressid_ecoop = ['https://ecoop.ee/et/toode/12776034-alma-piim-25-1l']
+aadressid_selver = ['https://www.selver.ee/piim-2-5-pure-alma-1-l']
+chromeDriver = 'C:/Users/Rait.soot/Downloads/chromedriver.exe'
+toodete_hinnad = []
+for prisma_aadress in aadressid_prisma:
+    driver = startSelenium(prisma_aadress)
+    source = driver.page_source
+    print(prisma_aadress)
+    print(source[1:10])
+    soup = BeautifulSoup(source, 'html.parser')
+    prisma_toote_hind = ""
+    for hind in prisma_hinna_andmed:
+        hinnad = soup.find_all("span", {"class": hind})
+        prisma_toote_hind += hinnad[0].text + '.'
+    prisma_toote_hind = float(prisma_toote_hind.strip("."))
+    prisma_toote_hind.append(toodete_hinnad)
+      
+for ecoop_address in aadressid_ecoop:
+    driver = startSelenium(ecoop_address)
+    source = driver.page_source
+    print(ecoop_address)
+    print(source[1:10])
+    soup = BeautifulSoup(source, 'html.parser')
+    ecoopi_toote_hind = ""
+    hinnad = soup.find_all("div", {"class": "base"})
+    ecoopi_toote_hind = hinnad[0].text.strip(" € / l")
+    ecoopi_toote_hind.append(toodete_hinnad)
+    
+for selver_address in aadressid_selver:
+    driver = startSelenium(selver_address)
+    source = driver.page_source
+    print(selver_address)
+    print(source[1:10])
+    soup = BeautifulSoup(source, 'html.parser')
+    selveri_toote_hind = ""
+    hinnad = soup.find_all("span", {"class": "ProductPrice__unit-price"})
+    selveri_toote_hind = hinnad[0].text.strip(" € / l")
+    selveri_toote_hind.append(toodete_hinnad)
+    
+print(toodete_hinnad)
+
