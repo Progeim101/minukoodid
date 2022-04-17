@@ -24,41 +24,40 @@ aadressid_prisma = ['https://www.prismamarket.ee/entry/piim-2-5---1-l/4740125120
 aadressid_ecoop = ['https://ecoop.ee/et/toode/12776034-alma-piim-25-1l']
 aadressid_selver = ['https://www.selver.ee/piim-2-5-pure-alma-1-l']
 chromeDriver = 'C:/Users/Rait.soot/Downloads/chromedriver.exe'
-toodete_hinnad = []
+
+myList = list()
+
 for prisma_aadress in aadressid_prisma:
     driver = startSelenium(prisma_aadress)
     source = driver.page_source
-    print(prisma_aadress)
-    print(source[1:10])
     soup = BeautifulSoup(source, 'html.parser')
     prisma_toote_hind = ""
     for hind in prisma_hinna_andmed:
         hinnad = soup.find_all("span", {"class": hind})
         prisma_toote_hind += hinnad[0].text + '.'
     prisma_toote_hind = ("Kõige odavam 1l piim on selveris hinnaga " + str(prisma_toote_hind.strip(".")))
-    prisma_toote_hind.append(toodete_hinnad)
-      
+    myList.append(prisma_toote_hind)
+    
+
+
 for ecoop_address in aadressid_ecoop:
     driver = startSelenium(ecoop_address)
     source = driver.page_source
-    print(ecoop_address)
-    print(source[1:10])
     soup = BeautifulSoup(source, 'html.parser')
     ecoopi_toote_hind = ""
     hinnad = soup.find_all("div", {"class": "base"})
     ecoopi_toote_hind = ("Kõige odavam 1l piim on ecoopis hinnaga " + hinnad[0].text.strip(" € / l"))
-    ecoopi_toote_hind.append(toodete_hinnad)
-    
+    myList.append(ecoopi_toote_hind)
+
+
+
 for selver_address in aadressid_selver:
     driver = startSelenium(selver_address)
     source = driver.page_source
-    print(selver_address)
-    print(source[1:10])
     soup = BeautifulSoup(source, 'html.parser')
     selveri_toote_hind = ""
     hinnad = soup.find_all("span", {"class": "ProductPrice__unit-price"})
     selveri_toote_hind = ("Kõige odavam 1l piim on selveris hinnaga " + hinnad[0].text.strip(" € / l"))
-    selveri_toote_hind.append(toodete_hinnad)
-    
-print(toodete_hinnad)
-#print(max(toodete_hinnad))
+    myList.append(selveri_toote_hind)
+myList.sort()
+print(myList[2])
